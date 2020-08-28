@@ -31,8 +31,9 @@ class DbHelper{
 
   Future<Database> initializeDb() async{
     Directory directory = await getApplicationDocumentsDirectory();
-    var db = join(directory.path,"student.db");
-    openDatabase(db,version: 1,onCreate: createDb);
+    String dbPath = join(directory.path,"student.db");
+    var db = openDatabase(dbPath,version: 1,onCreate: createDb);
+    return db;
   }
 
   FutureOr<void> createDb(Database db, int version) {
