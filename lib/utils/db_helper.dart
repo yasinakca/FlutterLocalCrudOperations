@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:local_database/models/student.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -38,5 +39,17 @@ class DbHelper{
 
   FutureOr<void> createDb(Database db, int version) async{
     await db.execute("create table student(id int primary key auto increment,name text,isActive int)");
+  }
+
+  Future<int> insert(Student student) async{
+    var db = await _getDb();
+    var result = await db.insert("student", student.toMap());
+    return result;
+  }
+
+  Future<List<Map>>getStudents() async{
+    var db = await _getDb();
+    var result = db.query("student");
+    return result;
   }
 }
