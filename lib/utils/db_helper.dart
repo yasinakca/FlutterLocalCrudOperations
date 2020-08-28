@@ -49,13 +49,20 @@ class DbHelper{
 
   Future<List<Map>>getStudents() async{
     var db = await _getDb();
-    var result = db.query("student");
+    var result = await db.query("student");
     return result;
   }
   
-  update(Student student) async{
+  Future<int> update(Student student) async{
     var db = await _getDb();
-    var result = db.update("student", student.toMap(),where: "id=?",whereArgs: [student.id]);
+    var result = await db.update("student", student.toMap(),where: "id=?",whereArgs: [student.id]);
     return result;
+  }
+
+  Future<int> delete(int id) async{
+    var db = await _getDb();
+    var result = await db.delete("student", where: "id = ?", whereArgs: [id]);
+    return result;
+
   }
 }
