@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class DbHelper{
   static DbHelper _dbHelper;
@@ -25,5 +29,12 @@ class DbHelper{
     }
   }
 
-  initializeDb() {}
+  Future<Database> initializeDb() async{
+    Directory directory = await getApplicationDocumentsDirectory();
+    var db = join(directory.path,"student.db");
+    openDatabase(db,version: 1,onCreate: createDb);
+  }
+
+  FutureOr<void> createDb(Database db, int version) {
+  }
 }
