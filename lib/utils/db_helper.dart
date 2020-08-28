@@ -36,6 +36,7 @@ class DbHelper{
     return db;
   }
 
-  FutureOr<void> createDb(Database db, int version) {
+  FutureOr<void> createDb(Database db, int version) async{
+    await db.execute("create table student(id int primary key auto increment,name text,isActive int)");
   }
 }
