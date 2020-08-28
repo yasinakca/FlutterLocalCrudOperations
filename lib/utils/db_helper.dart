@@ -52,4 +52,10 @@ class DbHelper{
     var result = db.query("student");
     return result;
   }
+  
+  update(Student student) async{
+    var db = await _getDb();
+    var result = db.update("student", student.toMap(),where: "id=?",whereArgs: [student.id]);
+    return result;
+  }
 }
