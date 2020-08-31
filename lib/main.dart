@@ -34,6 +34,9 @@ class _HomeState extends State<Home> {
   bool isActive = false;
   var nameController = TextEditingController();
 
+  var selectedIndex;
+  var selectedId;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -108,7 +111,12 @@ class _HomeState extends State<Home> {
                       "Update",
                       style: TextStyle(color: Colors.blue.shade300),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (formKey.currentState.validate()) {
+                        updateStudent(Student.withId(selectedId,
+                            nameController.text, isActive == true ? 1 : 0));
+                      }
+                    },
                   ),
                   RaisedButton(
                     child: Text(
@@ -133,14 +141,18 @@ class _HomeState extends State<Home> {
                           onTap: () {
                             setState(() {
                               nameController.text = studentList[index].name;
-                              isActive = studentList[index].isActive == 1 ? true : false;
+                              isActive = studentList[index].isActive == 1
+                                  ? true
+                                  : false;
                             });
+                            selectedIndex = index;
+                            selectedId = studentList[index].id;
                           },
                           title: Text(studentList[index].name),
                           subtitle: Text(studentList[index].id.toString()),
                           trailing: GestureDetector(
                             onTap: () {
-                              deleteStudent(studentList[index].id,index);
+                              deleteStudent(studentList[index].id, index);
                             },
                             child: Icon(Icons.delete),
                           ),
@@ -180,15 +192,30 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void deleteStudent(int id, int index) async{
-    var result =  await _dbHelper.delete(id);
-    if(result > 0) {
-      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Deleted"),duration: Duration(seconds: 1),));
+  void deleteStudent(int id, int index) async {
+    var result = await _dbHelper.delete(id);
+    if (result > 0) {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Deleted"),
+        duration: Duration(seconds: 1),
+      ));
       setState(() {
         studentList.removeAt(index);
       });
-    }else{
-      scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Error"),duration: Duration(seconds: 1),));
+    } else {
+      scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Error"),
+        duration: Duration(seconds: 1),
+      ));
+    }
+  }
+
+  void updateStudent(Student student) async {
+    var result = await _dbHelper.update(student);
+    if (result == 1) {
+      setState(() {
+        studentList[selectedIndex] = student;
+      });
     }
   }
 }
