@@ -38,7 +38,7 @@ class DbHelper{
   }
 
   FutureOr<void> createDb(Database db, int version) async{
-    await db.execute("create table student(id int primary key auto increment,name text,isActive int)");
+    await db.execute("CREATE TABLE student(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, isActive INTEGER)");
   }
 
   Future<int> insert(Student student) async{
@@ -49,7 +49,7 @@ class DbHelper{
 
   Future<List<Map>>getStudents() async{
     var db = await _getDb();
-    var result = await db.query("student");
+    var result = await db.query("student",orderBy: "name ASC");
     return result;
   }
   
@@ -63,6 +63,11 @@ class DbHelper{
     var db = await _getDb();
     var result = await db.delete("student", where: "id = ?", whereArgs: [id]);
     return result;
-
+  }
+  
+  Future<int> deleteTable() async{
+    var db = await _getDb();
+    var result = db.delete("student");
+    return result;
   }
 }
