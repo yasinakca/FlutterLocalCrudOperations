@@ -38,6 +38,4 @@ class Student{
     this._name = map["name"];
     this._isActive = map["isActive"];
   }
-
-
 }
